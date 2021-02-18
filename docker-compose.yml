@@ -1,0 +1,35 @@
+version: "2"
+services:
+  onos:
+    image: onosproject/onos:1.5
+    networks:
+      management:
+        ipv4_address: 10.28.34.2
+    volumes:
+      - ./volumes/onos:/root/onos/config
+    ports:
+      - "8181:8181"
+      - "8101:8101"
+    environment:
+      - ONOS_APPS=drivers,openflow-base,netcfghostprovider,lldpprovider,proxyarp
+
+  mininet:
+    privileged: true
+    image: prashplus/mininet-docker
+    networks:
+      management:
+        ipv4_address: 10.28.34.3
+    volumes:
+      - ./volumes/mininet:/root/script
+    command: mn --mac --custom /root/script/setup_topo.py
+    stdin_open: true
+    tty: true
+
+networks:
+  management:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.28.34.0/24
+          gateway: 10.28.34.1
