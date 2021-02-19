@@ -37,7 +37,7 @@ RUN pip install --user pandas
 RUN wget https://artifacts.elastic.co/downloads/kibana/kibana-6.2.3-linux-x86_64.tar.gz
 RUN tar -xvzf kibana-6.2.3-linux-x86_64.tar.gz
 
-
+# Setup local user to run ES
 RUN groupadd -g 1000 elasticsearch 
 RUN useradd elasticsearch -u 1000 -g 1000
 
@@ -54,10 +54,26 @@ COPY ./volumes/kibana/kibana.yml /kibana-6.2.3-linux-x86_64/config/
 
 ENV PATH=$PATH:/elasticsearch-6.2.3/bin
 ENV PATH=$PATH:/kibana-6.2.3-linux-x86_64/bin
+WORKDIR /
 
+# Install Logstash
+RUN wget https://artifacts.elastic.co/downloads/logstash/logstash-6.2.4.tar.gz
+RUN tar -xvzf logstash-6.2.4.tar.gz
+
+COPY ./volumes/logstash/logstash.yml /logstash-6.2.4/config/
+ENV PATH=$PATH:/logstash-6.2.4/bin
+
+
+# Install Stream Sets
+RUN wget https://archives.streamsets.com/datacollector/3.1.2.0/tarball/streamsets-datacollector-core-3.1.2.0.tgz
+RUN tar -xvzf streamsets-datacollector-core-3.1.2.0.tgz
+
+
+# Install Kafka
+RUN wget https://archive.apache.org/dist/kafka/1.0.0/kafka_2.11-1.0.0.tgz
+RUN tar -xvzf kafka_2.11-1.0.0.tgz
 
 USER elasticsearch
-WORKDIR /
 COPY ./entry.sh /entry.sh
 ENTRYPOINT ["/entry.sh"]
 
