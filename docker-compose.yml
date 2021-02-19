@@ -25,6 +25,18 @@ services:
     stdin_open: true
     tty: true
 
+  app:
+    privileged: true
+    image: prashplus/mininet-docker
+    networks:
+      management:
+        ipv4_address: 10.28.34.3
+    volumes:
+      - ./volumes/mininet:/root/script
+    command: mn --mac --custom /root/script/setup_topo.py
+    stdin_open: true
+    tty: true
+
 networks:
   management:
     driver: bridge
