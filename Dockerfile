@@ -38,8 +38,28 @@ RUN wget https://artifacts.elastic.co/downloads/kibana/kibana-6.2.3-linux-x86_64
 RUN tar -xvzf kibana-6.2.3-linux-x86_64.tar.gz
 
 
-RUN /elasticsearch-6.2.3/bin/elasticsearch &
+RUN groupadd -g 1000 elasticsearch 
+RUN useradd elasticsearch -u 1000 -g 1000
 
-WORKDIR /kibana-6.2.3-linux-x86_64
-ENTRYPOINT ["bin/kibana"]
-EXPOSE 5601
+WORKDIR /elasticsearch-6.2.3
+RUN set -ex && for path in data logs config config/scripts; do \
+    mkdir -p "$path"; \
+    chown -R elasticsearch:elasticsearch "$path"; \
+    done
+
+COPY ./volumes/elasticsearch/logging.yml /elasticsearch-6.2.3/config/
+COPY ./volumes/elasticsearch/elasticsearch.yml /elasticsearch-6.2.3/config/
+COPY ./volumes/kibana/kibana.yml /kibana-6.2.3-linux-x86_64/config/
+
+
+ENV PATH=$PATH:/elasticsearch-6.2.3/bin
+ENV PATH=$PATH:/kibana-6.2.3-linux-x86_64/bin
+
+
+USER elasticsearch
+WORKDIR /
+COPY ./entry.sh /entry.sh
+ENTRYPOINT ["/entry.sh"]
+
+
+EXPOSE 9200 9300 5601
