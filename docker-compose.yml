@@ -17,7 +17,7 @@ services:
   mininet:
     container_name: mininet
     privileged: true
-    image: iwaseyusuke/mininet
+    image: prashplus/mininet-docker
     networks:
       management:
         ipv4_address: 10.28.34.3

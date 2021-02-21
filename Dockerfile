@@ -92,16 +92,10 @@ RUN rm -rf kafka_2.11-1.0.0.tgz
 RUN mv kafka_2.11-1.0.0 kafka
 
 COPY ./volumes/kafka/server.properties /kafka/config/
+
+
+# 
 COPY ./scripts /scripts
-
-
-# Add Update logstash permission
-WORKDIR /logstash
-RUN set -ex && for path in data logs config config/scripts; do \
-    mkdir -p "$path"; \
-    chown -R elasticsearch:elasticsearch "$path"; \
-    done
-
 WORKDIR /scripts
 
 USER elasticsearch
