@@ -1,6 +1,7 @@
 version: "2"
 services:
   onos:
+    container_name: onos
     image: onosproject/onos:1.5
     networks:
       management:
@@ -14,18 +15,21 @@ services:
       - ONOS_APPS=drivers,openflow-base,netcfghostprovider,lldpprovider,proxyarp
 
   mininet:
+    container_name: mininet
     privileged: true
-    image: prashplus/mininet-docker
+    image: iwaseyusuke/mininet
     networks:
       management:
         ipv4_address: 10.28.34.3
     volumes:
       - ./volumes/mininet:/root/script
-    # command: mn --mac --custom /root/script/setup_topo.py
     stdin_open: true
     tty: true
+    environment:
+      - DISPLAY
 
-  vm-app:
+  app:
+    container_name: app
     hostname: "louis"
     privileged: true
     image: louisnguyen96/vm-app

@@ -95,7 +95,7 @@ COPY ./volumes/kafka/server.properties /kafka/config/
 COPY ./scripts /scripts
 
 
-# Add elasticsearch
+# Add Update logstash permission
 WORKDIR /logstash
 RUN set -ex && for path in data logs config config/scripts; do \
     mkdir -p "$path"; \

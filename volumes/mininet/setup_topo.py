@@ -29,6 +29,9 @@ import subprocess
 import sys
 from functools import partial
 
+import mininet.node
+import mininet.link
+
 from mininet.cli import CLI
 from mininet.link import Intf
 from mininet.log import error, info, setLogLevel
