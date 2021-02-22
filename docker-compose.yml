@@ -17,7 +17,7 @@ services:
   mininet:
     container_name: mininet
     privileged: true
-    image: prashplus/mininet-docker
+    image: mininet
     networks:
       management:
         ipv4_address: 10.28.34.3
@@ -27,6 +27,7 @@ services:
     tty: true
     environment:
       - DISPLAY
+    # command: "service openvswitch-switch start"
 
   app:
     container_name: app
